@@ -8,10 +8,13 @@ import galaxyraiders.helpers.VisualizerSpy
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import java.nio.file.Paths
 
 @DisplayName("Given a game engine")
 class GameEngineTest {
@@ -20,23 +23,31 @@ class GameEngineTest {
   private val minGenerator = MinValueGeneratorStub()
   private val controllerSpy = ControllerSpy()
   private val visualizerSpy = VisualizerSpy()
+  val dateTime = LocalDateTime.now() // Obtém o LocalDateTime atual
+  val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss") // Define o padrão desejado
+  val formattedDateTime = dateTime.format(formatter)
+  val path: String = Paths.get("").toAbsolutePath().toString()+"/src/main/kotlin/galaxyraiders/core/score/Scoreboard.json"
+  private val scoreSpy = Score(0.0, 0, formattedDateTime,path)
 
   private val normalGame = GameEngine(
     generator = avgGenerator,
     controller = controllerSpy,
     visualizer = visualizerSpy,
+    scoreCount = scoreSpy,
   )
 
   private val easyGame = GameEngine(
     generator = maxGenerator,
     controller = controllerSpy,
     visualizer = visualizerSpy,
+    scoreCount = scoreSpy,
   )
 
   private val hardGame = GameEngine(
     generator = minGenerator,
     controller = controllerSpy,
     visualizer = visualizerSpy,
+    scoreCount = scoreSpy,
   )
 
   @Test
