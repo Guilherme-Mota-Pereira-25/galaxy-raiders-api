@@ -4,7 +4,6 @@ import galaxyraiders.Config
 import galaxyraiders.core.physics.Point2D
 import galaxyraiders.core.physics.Vector2D
 import galaxyraiders.ports.RandomGenerator
-// import kotlin.collections.MutableList
 
 object SpaceFieldConfig {
   private val config = Config(prefix = "GR__CORE__GAME__SPACE_FIELD__")
@@ -66,20 +65,9 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
   }
 
   fun generateExplosion(asteroid: SpaceObject) {
+    /* Create an Explosion from an Asteroid and add it to the Explosion list */
     this.explosions += this.createExplosion(asteroid.center, asteroid.radius, asteroid.mass)
   }
-
-  /*fun deleteMissile(missile: SpaceObject) {
-    this.missiles.remove(missile)
-  }
-
-  fun deleteAsteroid(asteroid: SpaceObject) {
-    this.asteroids.remove(asteroid)
-  }
-
-  fun deleteExplosion(explosion: SpaceObject) {
-    this.explosions.remove(explosion)
-  }*/
 
   fun trimMissiles() {
     this.missiles = this.missiles.filter {
@@ -94,6 +82,7 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
   }
 
   fun trimExplosions() {
+    /* Remove the explosions that have ended */
     this.explosions = this.explosions.filter {
       it.explosionEnded()
     }
@@ -181,6 +170,7 @@ data class SpaceField(val width: Int, val height: Int, val generator: RandomGene
   }
 
   private fun createExplosion(position: Point2D, radius: Double, mass: Double): Explosion {
+    /* Create an Explosion with the passed parameters */
     return Explosion(
       position,
       radius,

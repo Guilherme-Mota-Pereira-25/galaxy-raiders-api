@@ -3,8 +3,6 @@ package galaxyraiders.core.game
 import galaxyraiders.core.physics.Point2D
 import galaxyraiders.core.physics.Vector2D
 
-// const val RADIUS = 3.0
-// const val MASS = 1.0
 const val MAX_CYCLES = 3
 
 class Explosion(
@@ -12,7 +10,7 @@ class Explosion(
   radius: Double,
   mass: Double
 ) : SpaceObject("Explosion", '*', position, Vector2D(0.0, 0.0), radius, mass) {
-  var cyclesRemaining = MAX_CYCLES
+  var cyclesRemaining = MAX_CYCLES // count the lifetime of the explosion
 
   fun decreaseCyclesRemaining() {
     this.cyclesRemaining -= 1

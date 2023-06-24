@@ -6,9 +6,9 @@ import galaxyraiders.adapters.tui.TextUserInterface
 import galaxyraiders.adapters.web.WebUserInterface
 import galaxyraiders.core.game.GameEngine
 import galaxyraiders.core.game.Score
-import java.time.format.DateTimeFormatter
-import java.time.LocalDateTime
 import java.nio.file.Paths
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import kotlin.concurrent.thread
 import kotlin.random.Random
 
@@ -46,7 +46,7 @@ fun main() {
   val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss") // Define o padrão desejado
   val formattedDateTime = dateTime.format(formatter)
 
-  val path: String = Paths.get("").toAbsolutePath().toString()+"/src/main/kotlin/galaxyraiders/core/score"
+  val path: String = Paths.get("").toAbsolutePath().toString() + "/src/main/kotlin/galaxyraiders/core/score"
 
   val scoreCount = Score(
     ZERO_DOUBLE, ZERO_INT, formattedDateTime, path
