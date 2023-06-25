@@ -13,18 +13,19 @@ class ScoreTest {
     score = 10.0,
     asteroidsDestroyed = 3,
     date = "03/03/2023",
-    path = Paths.get("").toAbsolutePath().toString()+"/src/test/kotlin/galaxyraiders/core/score"
+    path = Paths.get("").toAbsolutePath().toString() + "/src/test/kotlin/galaxyraiders/core/score"
   )
 
   @Test
   fun `add to Scoreboard working`() {
-    var file = File(score.path+"/Scoreboard.json")
+    /* Try to add an object to the Scoreboard.json file and check if the object was really added */
+    var file = File(score.path + "/Scoreboard.json")
     file.writeText("")
 
     var jsonContent = file.readText()
 
     val gson = Gson()
-    
+
     val oldData: List<Score> = gson.fromJson(jsonContent, Array<Score>::class.java)?.toList() ?: emptyList()
     val expectedData = oldData + score
 
@@ -37,11 +38,13 @@ class ScoreTest {
 
   @Test
   fun `add to Leaderboard working`() {
-    var file: File = File(score.path+"/Leaderboard.json")
+    /* Try to successively add new objects to Leaderboard.json 
+    and check that the Scores are being sorted and keep only the top 3 */
+    var file: File = File(score.path + "/Leaderboard.json")
     file.writeText("")
 
     var gson: Gson = Gson()
-    
+
     // One element
     score.addToLeaderboard()
     var fileContent: String = file.readText()

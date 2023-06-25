@@ -103,17 +103,17 @@ class GameEngine(
     }
   }
 
-  private fun isMissile(objectt: SpaceObject): Boolean {
+  fun isMissile(objectt: SpaceObject): Boolean {
     /* Verify if the object is a Missile */
     return (objectt is Missile)
   }
 
-  private fun isAsteroid(objectt: SpaceObject): Boolean {
+  fun isAsteroid(objectt: SpaceObject): Boolean {
     /* Verify if the object is a Asteroid */
     return (objectt is Asteroid)
   }
 
-  private fun missileAndAsteroidToExplosion(missile: SpaceObject, asteroid: SpaceObject) {
+  fun missileAndAsteroidToExplosion(missile: SpaceObject, asteroid: SpaceObject) {
     /* Increase the score, generate a Explosion and 'remove' the missile and the asteroid */
     this.increaseScore(asteroid)
     this.field.generateExplosion(asteroid)

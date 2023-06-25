@@ -15,6 +15,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
+import galaxyraiders.core.physics.Point2D
+import galaxyraiders.core.physics.Vector2D
 
 @DisplayName("Given a game engine")
 class GameEngineTest {
@@ -247,5 +249,64 @@ class GameEngineTest {
       { assertEquals(expectedNumRenders, visualizerSpy.numRenders) },
       { assertTrue(hardGame.field.asteroids.size <= numPlayerCommands - 1) },
     )
+  }
+
+  @Test
+  fun `explosions are progressing`() {
+    normalGame.field.generateExplosion(SpaceObject("Object",'.',Point2D(0.0, 0.0),Vector2D(1.0,1.0), 1.0, 1.0))
+    normalGame.field.generateExplosion(SpaceObject("Object",'.',Point2D(0.0, 0.0),Vector2D(1.0,1.0), 1.0, 1.0))
+    normalGame.field.generateExplosion(SpaceObject("Object",'.',Point2D(0.0, 0.0),Vector2D(1.0,1.0), 1.0, 1.0))
+
+    var explosions: List<Int> = emptyList()
+    for (explosion in normalGame.field.explosions) {
+      explosions = explosions + explosion.cyclesRemaining
+    }
+    normalGame.changeCyclesExplosions()
+    var i: Int = 0
+    for (explosion in normalGame.field.explosions) {
+      assertEquals(explosions.elementAt(i)-1,explosion.cyclesRemaining)
+    }
+  }
+
+  @Test
+  fun `missile type asserting correctly`() {
+    var missile: Missile = Missile(Point2D(0.0,0.0), Vector2D(0.0,0.0), 1.0, 1.0)
+    var notAnMissile: Asteroid = Asteroid(Point2D(0.0,0.0), Vector2D(0.0,0.0), 1.0, 1.0)
+    
+    assertTrue(normalGame.isMissile(missile))
+    assertTrue(!normalGame.isMissile(notAnMissile))
+  }
+
+  @Test
+  fun `asteroid type asserting correctly`() {
+    var asteroid: Asteroid = Asteroid(Point2D(0.0,0.0), Vector2D(0.0,0.0), 1.0, 1.0)
+    var notAnAsteroid: Missile = Missile(Point2D(0.0,0.0), Vector2D(0.0,0.0), 1.0, 1.0)
+    
+    assertTrue(normalGame.isAsteroid(asteroid))
+    assertTrue(!normalGame.isAsteroid(notAnAsteroid))
+  }
+
+  @Test
+  fun `is increasing score when missile hits an asteroid`() {
+    var missile: Missile = Missile(Point2D(1.0,1.0), Vector2D(1.0,1.0), 1.0, 1.0)
+    var asteroid: Asteroid = Asteroid(Point2D(1.0,1.0), Vector2D(1.0,1.0), 1.0, 1.0)
+    var oldScore: Double = normalGame.scoreCount.score
+
+    var oldPath = normalGame.scoreCount.path
+    normalGame.scoreCount.path = Paths.get("").toAbsolutePath().toString() + "/src/test/kotlin/galaxyraiders/core/score"
+
+    normalGame.missileAndAsteroidToExplosion(missile,asteroid)
+
+    // New score should be bigger than the old one
+    assertTrue(normalGame.scoreCount.score > oldScore)
+
+    var explosion: Explosion = Explosion(Point2D(0.0,0.0), 0.0, 0.0)
+    for (possibleExplosion in normalGame.field.explosions) {
+      if (possibleExplosion.center == asteroid.center)
+        explosion = possibleExplosion
+    }
+    assertEquals(explosion.center, asteroid.center)
+    
+    normalGame.scoreCount.path = oldPath
   }
 }

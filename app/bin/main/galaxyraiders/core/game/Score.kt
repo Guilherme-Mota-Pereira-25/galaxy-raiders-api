@@ -5,7 +5,7 @@ import java.io.File
 
 const val MIN_SCORE = 3
 
-data class Score (
+data class Score(
   var score: Double,
   var asteroidsDestroyed: Int,
   var date: String,
@@ -13,21 +13,19 @@ data class Score (
 ) {
 
   private var firstTime: Boolean = true
-  private var leadSize: Int = 0
-  // var asteroidsDestroyed: Int = asteroidsDestroyed
 
   fun addToScoreboard() {
-    val file = File(this.path+"/Scoreboard.json")
+    /* Remove the last Score from Scoreboard.json and insert the updated score */
+    val file = File(this.path + "/Scoreboard.json")
     file.createNewFile()
     val jsonContent = file.readText()
     val gson = Gson()
     var existingData: MutableList<Score> = gson.fromJson(jsonContent, Array<Score>::class.java)?.toMutableList() ?: mutableListOf<Score>()
-    
-    var updatedData = existingData
+
+    var updatedData: MutableList<Score> = existingData
     if (firstTime) {
       firstTime = false
-    }
-    else if (updatedData.size > 0) {
+    } else if (updatedData.size > 0) {
       updatedData.removeLast()
     }
     updatedData.add(this)
@@ -36,18 +34,19 @@ data class Score (
   }
 
   fun addToLeaderboard() {
-    val file: File = File(this.path+"/Leaderboard.json")
+    /* Read the Leaderboard.json, insert the current Score and remove the smallest one */
+    val file: File = File(this.path + "/Leaderboard.json")
     file.createNewFile()
     val jsonContent = file.readText()
     val gson = Gson()
     val existingData: List<Score> = gson.fromJson(jsonContent, Array<Score>::class.java)?.toList() ?: emptyList()
-  
+
     var resultData: List<Score> = emptyList()
-    var updatedData = existingData + this
+    var updatedData: List<Score> = existingData + this
     if (updatedData.size > MIN_SCORE) {
       var lowerScore: Double = Double.POSITIVE_INFINITY
       var lowerObj: Score? = null
-      for (score in updatedData) { 
+      for (score in updatedData) {
         if (score.score < lowerScore) {
           lowerScore = score.score
           lowerObj = score
@@ -55,11 +54,10 @@ data class Score (
       }
       for (score in updatedData) {
         if (score != lowerObj) {
-          resultData = resultData+score
+          resultData = resultData + score
         }
       }
-    }
-    else {
+    } else {
       resultData = updatedData
     }
     resultData = resultData.sortedByDescending { it.score }

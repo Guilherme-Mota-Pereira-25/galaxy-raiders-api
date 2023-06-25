@@ -88,6 +88,8 @@ class GameEngine(
   }
 
   fun increaseScore(asteroid: SpaceObject) {
+    /* Calculate the value of an asteroid destroyed, add this value
+    to the Score and update the Scoreboard and the Leaderboard */
     this.scoreCount.score += asteroid.mass.pow(2) / asteroid.radius
     this.scoreCount.asteroidsDestroyed += 1
     this.scoreCount.addToScoreboard()
@@ -95,41 +97,36 @@ class GameEngine(
   }
 
   fun changeCyclesExplosions() {
+    /* Decreases the lifetime of the explosions */
     for (explosion in this.field.explosions) {
       explosion.decreaseCyclesRemaining()
-      /*if (explosion.explosionEnded()) {
-        //this.field.explosions.remove(explosion)
-        this.field.deleteExplosion(explosion as Explosion)
-      }*/
     }
   }
 
-  private fun isMissile(objectt: SpaceObject): Boolean {
+  fun isMissile(objectt: SpaceObject): Boolean {
+    /* Verify if the object is a Missile */
     return (objectt is Missile)
   }
 
-  private fun isAsteroid(objectt: SpaceObject): Boolean {
+  fun isAsteroid(objectt: SpaceObject): Boolean {
+    /* Verify if the object is a Asteroid */
     return (objectt is Asteroid)
   }
 
-  private fun missileAndAsteroidToExplosion(missile: SpaceObject, asteroid: SpaceObject) {
+  fun missileAndAsteroidToExplosion(missile: SpaceObject, asteroid: SpaceObject) {
+    /* Increase the score, generate a Explosion and 'remove' the missile and the asteroid */
     this.increaseScore(asteroid)
     this.field.generateExplosion(asteroid)
     missile.colision = true
     asteroid.colision = true
-    // this.field.deleteMissile(missile as Missile)
-    // this.field.deleteAsteroid(asteroid as Asteroid)
   }
 
   fun handleCollisions() {
+    /* Verify if a collision ocurred, and generate an Explosion
+    if the Objects are a Missile and an Asteroid */
     this.field.spaceObjects.forEachPair {
         (first, second) ->
       if (first.impacts(second)) {
-        /*if (first is Missile && second is Asteroid) {
-          this.missileAndAsteroidToExplosion(first, second)
-        } else if (second is Missile && first is Asteroid) {
-          this.missileAndAsteroidToExplosion(second, first)
-        }*/
         if (this.isMissile(first) && this.isAsteroid(second)) {
           this.missileAndAsteroidToExplosion(first, second)
         } else if (this.isMissile(second) && this.isAsteroid(first)) {

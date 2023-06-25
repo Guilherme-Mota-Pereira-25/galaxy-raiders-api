@@ -100,4 +100,3 @@ operator fun Double.times(v: Vector2D): Vector2D {
   var newDy: Double = this * v.dy
   return Vector2D(newDx, newDy)
 }
-
